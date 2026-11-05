@@ -1,14 +1,14 @@
+import {createDragTrack} from './drag-track.js';
+import {addMapDetails} from './map-details.js';
 import {addGymkhana} from './gymkhana.js';
 import * as T from 'three';
-export const TRACKS=[
- {name:'Alpine Circuit',tag:'ALPINE / 01',subtitle:'Pine forests. Hairpins. A proper racing line.',difficulty:'TECHNICAL',theme:'alpine',width:14,sky:'#cbdedb',ground:'#88a78a',road:'#47565b',accent:'#edbb74',points:[[-68,42],[-78,-25],[-47,-66],[13,-65],[51,-39],[71,-52],[91,-10],[71,30],[29,16],[9,58],[-31,69]]},
- {name:'Coastal Run',tag:'COASTAL / 02',subtitle:'Ocean air and wide, sweeping corners.',difficulty:'FAST',theme:'coastal',width:16,sky:'#c6e2e5',ground:'#b2bf9b',road:'#516367',accent:'#e9d2a0',points:[[-77,36],[-86,-23],[-47,-69],[21,-66],[78,-40],[88,19],[52,63],[11,39],[-22,66]]},
- {name:'Dockyard Drift Park',tag:'DOCKYARD / 03',subtitle:'Wide asphalt. Clipping points. Find your angle.',difficulty:'DRIFT',theme:'dockyard',width:20,sky:'#d9dcd2',ground:'#949f92',road:'#535b5e',accent:'#e1a36c',points:[[-67,43],[-73,-26],[-33,-58],[12,-40],[52,-57],[81,-11],[48,18],[56,56],[5,66],[-17,27]]}
-];
+import {TRACKS} from './track-catalog.js';
+export {TRACKS} from './track-catalog.js';
 const mat=color=>new T.MeshStandardMaterial({color,flatShading:true,roughness:1});
 function addMesh(group,geo,material,x=0,y=0,z=0){const m=new T.Mesh(geo,material);m.position.set(x,y,z);m.receiveShadow=true;group.add(m);return m;}
 function instances(group,geo,material,transforms){const m=new T.InstancedMesh(geo,material,transforms.length);const d=new T.Object3D();transforms.forEach((t,i)=>{d.position.set(...t.p);d.scale.set(...(t.s||[1,1,1]));d.rotation.set(0,t.yaw||0,0);d.updateMatrix();m.setMatrixAt(i,d.matrix);});m.computeBoundingSphere();m.receiveShadow=true;group.add(m);return m;}
 export function createTrack(scene,index=0){
+ if(TRACKS[index]?.kind==='drag')return createDragTrack(scene,TRACKS[index]);
  const group=new T.Group();scene.add(group);const config=TRACKS[index],width=config.width,curve=new T.CatmullRomCurve3(config.points.map(([x,z])=>new T.Vector3(x,.045,z)),true,'catmullrom',.32),length=curve.getLength(),samples=curve.getSpacedPoints(360),tangents=samples.map((_,i)=>curve.getTangentAt(i/360));
  const grid=new Map();const cell=18;for(let i=0;i<360;i++){const a=samples[i],b=samples[i+1];for(let x=Math.floor(Math.min(a.x,b.x)/cell)-1;x<=Math.floor(Math.max(a.x,b.x)/cell)+1;x++)for(let z=Math.floor(Math.min(a.z,b.z)/cell)-1;z<=Math.floor(Math.max(a.z,b.z)/cell)+1;z++){const key=x+','+z;if(!grid.has(key))grid.set(key,[]);grid.get(key).push(i);}}
  const all=Array.from({length:360},(_,i)=>i);function nearest(p){const list=grid.get(Math.floor(p.x/cell)+','+Math.floor(p.z/cell))||all;let min=Infinity,progress=0;for(const i of list){const a=samples[i],b=samples[i+1],x=b.x-a.x,z=b.z-a.z,t=Math.max(0,Math.min(1,((p.x-a.x)*x+(p.z-a.z)*z)/(x*x+z*z))),d=(p.x-a.x-x*t)**2+(p.z-a.z-z*t)**2;if(d<min){min=d;progress=(i+t)/360;}}return {distance:Math.sqrt(min),progress};}
@@ -28,15 +28,18 @@ export function createEnvironment(scene,index=0,track){
  const group=new T.Group();scene.add(group);const c=TRACKS[index];let seed=91+index*109;const random=()=>{seed=seed*16807%2147483647;return seed/2147483647;},colliders=[];
  if(c.theme==='coastal'){const ocean=addMesh(group,new T.PlaneGeometry(2400,2400),mat('#6bafb9'),0,-.34,0);ocean.rotation.x=-Math.PI/2;addMesh(group,new T.CylinderGeometry(141,144,.25,40),mat('#dbcfad'),0,-.16,0);addMesh(group,new T.CylinderGeometry(130,130,.015,40),mat(c.ground),0,-.025,0);}
  else{const ground=addMesh(group,new T.PlaneGeometry(2400,2400),mat(c.ground),0,-.025,0);ground.rotation.x=-Math.PI/2;}
- const mountains=[[],[],[]];for(let i=0;i<30;i++){const a=i/30*Math.PI*2,r=215+random()*85,h=c.theme==='coastal'?5+random()*14:25+random()*55;mountains[i%3].push({p:[Math.cos(a)*r,h/2-3,Math.sin(a)*r],s:[45+random()*40,h,45+random()*40],yaw:random()*6});}mountains.forEach((t,i)=>instances(group,new T.ConeGeometry(1,1,5),mat(['#76958b','#89a49a','#a0b7a6'][i]),t));
+ if(c.theme==='drag'){addMapDetails(group,colliders,c,track);group.userData.colliders=colliders;return group;}
+ const mountains=[[],[],[]];for(let i=0;i<30;i++){const a=i/30*Math.PI*2,r=215+random()*85,h=c.theme==='coastal'?5+random()*14:25+random()*55;mountains[i%3].push({p:[Math.cos(a)*r,h/2-3,Math.sin(a)*r],s:[45+random()*40,h,45+random()*40],yaw:random()*6});}mountains.forEach((t,i)=>instances(group,new T.ConeGeometry(1,1,5),mat((c.theme==='city'?['#253e4d','#2b4654','#345563']:c.theme==='desert'?['#a57760','#ba8a6a','#cd9f7a']:['#76958b','#89a49a','#a0b7a6'])[i]),t));
  if(c.theme==='dockyard'){
   const buildings=[],boxes=[[],[],[]];for(let i=0;i<18;i++){const a=i/18*Math.PI*2,r=117+random()*18,x=Math.cos(a)*r,z=Math.sin(a)*r,h=4+random()*10,w=9+random()*9,d=6+random()*8;buildings.push({p:[x,h/2,z],s:[w,h,d],yaw:a});colliders.push({position:[x,h/2,z],half:[w/2,h/2,d/2],yaw:a});for(let j=0;j<2;j++){const p=[x+Math.sin(a)*13,1.3+j*2.6,z-Math.cos(a)*13];boxes[i%3].push({p,s:[6,2.6,2.4],yaw:a});colliders.push({position:p,half:[3,1.3,1.2],yaw:a});}}
   instances(group,new T.BoxGeometry(1,1,1),mat('#b9c0b4'),buildings);boxes.forEach((t,i)=>instances(group,new T.BoxGeometry(1,1,1),mat(['#8da9a4','#b9876e','#d0be8a'][i]),t));
+ }else if(c.theme==='desert'||c.theme==='city'){
+  // Theme-specific scenery is batched by the detail builder below.
  }else{
   const foliage=[[],[]],trunks=[],rocks=[];let attempts=0;while(trunks.length<150&&attempts++<900){const x=(random()-.5)*320,z=(random()-.5)*320;if(c.theme==='coastal'&&Math.hypot(x,z)>126)continue;if(track&&track.nearest({x,z}).distance<c.width/2+5)continue;const h=3+random()*5,s=.8+random()*.7;trunks.push({p:[x,c.theme==='coastal'?h/2:h*.2,z],s:[.23,c.theme==='coastal'?h:h*.4,.23]});foliage[trunks.length%2].push({p:[x,c.theme==='coastal'?h:h*.6,z],s:[1.7*s,c.theme==='coastal'?1.6:h,1.7*s],yaw:random()*6});}
   const trunk=instances(group,new T.CylinderGeometry(1,1,1,5),mat('#81785e'),trunks);foliage.forEach((t,i)=>{const tree=instances(group,c.theme==='coastal'?palmGeometry():new T.ConeGeometry(1,1,6),mat(i?'#5f8e73':'#487b66'),t);tree.castShadow=true;});
   for(let i=0;i<45;i++){const a=random()*6.28,r=105+random()*20,x=Math.cos(a)*r,z=Math.sin(a)*r;if(track&&track.nearest({x,z}).distance<c.width/2+4)continue;rocks.push({p:[x,.6,z],s:[1+random()*2,.8+random(),1+random()*2],yaw:a});}instances(group,new T.DodecahedronGeometry(1,0),mat('#aebaa5'),rocks);
   if(c.theme==='coastal'){const huts=[];for(let i=0;i<6;i++)huts.push({p:[-25+i*11,1.3,-105],s:[5,2.6,5]});instances(group,new T.BoxGeometry(1,1,1),mat('#ded5b2'),huts);}
  }
- if(c.theme==='dockyard')addGymkhana(group,colliders);group.userData.colliders=colliders;return group;
+ addMapDetails(group,colliders,c,track);if(c.theme==='dockyard')addGymkhana(group,colliders);group.userData.colliders=colliders;return group;
 }

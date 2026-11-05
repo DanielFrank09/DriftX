@@ -36,7 +36,7 @@ audio.updateCar('local', {rpm:4200, redline:7800, cylinders:6,
   throttle:.8, boost:1.1, slipVelocity:4, active:true}, {profile:'i6'});
 ```
 
-No sampled engine recordings are included by default. See `AUDIO-PIPELINE.md` and `scripts/audio-assets.mjs` for license-aware search/import. The shipped manifest is intentionally empty so synthesis works immediately. Real recording fidelity and perceived audio quality require listening on the player's audio device; output signal and browser activation were instrumented and verified.
+V0.4 includes sampled road-car and V8 engine profiles with creator credits and licenses in public/audio/ATTRIBUTION.md. See `AUDIO-PIPELINE.md` and `scripts/audio-assets.mjs` for license-aware search/import. The shipped manifest selects sampled profiles automatically, and synthesis remains available if a file fails. Real recording fidelity and perceived audio quality require listening on the player's audio device; output signal and browser activation were instrumented and verified.
 
 ## 3. Part schema and sharing
 
@@ -73,4 +73,8 @@ The integrated tandem modes are explicitly **practice scoring**. The judge is pu
 
 ## Validation
 
-32 automated tests pass: all 12 Rapier cars settle and drive, variable render rates agree, tire force limits hold, handbrake can initiate high-angle drift, camera distance stays stable, builds sanitize/round-trip, and judging rejects low-speed/contact exploits. Browser checks verified WASM driving, turbo boost, build selection/link creation, gymkhana selection, audio activation and nonzero output signal. The larger Rapier compatibility/WASM chunk adds roughly 1.65 MB compressed to first load; it is cached separately from the game code. No rendering quality increase was added.
+37 automated tests pass: all 12 Rapier cars settle and drive, variable render rates agree, tire force limits hold, handbrake can initiate high-angle drift, camera distance stays stable, builds sanitize/round-trip, and judging rejects low-speed/contact exploits. Browser checks verified WASM driving, turbo boost, build selection/link creation, gymkhana selection, audio activation and nonzero output signal. The larger Rapier compatibility/WASM chunk adds roughly 1.65 MB compressed to first load; it is cached separately from the game code. No rendering quality increase was added.
+
+## V0.4 maps and drag runs
+
+Six maps are selectable: Alpine, Coastal, Dockyard, Redrock Raceway, Midnight Boulevard and Quarter Mile Dragway. The original maps have added landmarks; the desert has mesas/cacti/stone gateway, and the city has lit towers and street lamps. Dragway has two parallel 402.336 m lanes, staging lights, lane selection, interpolated elapsed timing, trap speed and a long shutdown area. Finished/invalid runs brake automatically; R restages. The lanes can be shared in rooms, but countdowns/results remain local practice rather than authoritative multiplayer racing.

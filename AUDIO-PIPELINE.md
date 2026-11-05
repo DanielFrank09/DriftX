@@ -1,6 +1,6 @@
 # Audio asset pipeline
 
-The game runs standalone with procedural engine, tire, BOV, backfire and impact sounds. No sampled engine recordings are shipped or claimed to be licensed. Real engine quality depends on the recordings you import.
+V0.4 ships six compact sampled engine layers from OpenGameArt: GGBotNet road-car recordings (CC0) and DerMeehdrescher / Meehdrescher Studios V8 loops (CC BY-SA 4.0). Sources, modifications and licenses are retained in public/audio/ATTRIBUTION.md. These are generic profiles, not exact branded-car recordings. Procedural tire, BOV, backfire and impact effects remain the fallback. Runtime loop boundaries crossfade over 30 ms and decoded files are cached across profiles.
 
 Sources verified for this build:
 

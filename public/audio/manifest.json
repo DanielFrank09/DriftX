@@ -1,1 +1,106 @@
-{"version":1,"profiles":{},"events":{},"assets":[]}
+{
+  "version": 2,
+  "profiles": {
+    "stock": [
+      {
+        "url": "/audio/road-idle.ogg",
+        "rpm": 1000
+      },
+      {
+        "url": "/audio/road-mid.ogg",
+        "rpm": 3200
+      },
+      {
+        "url": "/audio/road-high.ogg",
+        "rpm": 6500
+      }
+    ],
+    "i4": [
+      {
+        "url": "/audio/road-idle.ogg",
+        "rpm": 1000
+      },
+      {
+        "url": "/audio/road-mid.ogg",
+        "rpm": 3200
+      },
+      {
+        "url": "/audio/road-high.ogg",
+        "rpm": 6500
+      }
+    ],
+    "i6": [
+      {
+        "url": "/audio/road-idle.ogg",
+        "rpm": 1000
+      },
+      {
+        "url": "/audio/road-mid.ogg",
+        "rpm": 3200
+      },
+      {
+        "url": "/audio/road-high.ogg",
+        "rpm": 6500
+      }
+    ],
+    "v8": [
+      {
+        "url": "/audio/v8-idle.ogg",
+        "rpm": 1000
+      },
+      {
+        "url": "/audio/v8-mid.ogg",
+        "rpm": 3500
+      },
+      {
+        "url": "/audio/v8-high.ogg",
+        "rpm": 6500
+      }
+    ]
+  },
+  "events": {},
+  "assets": [
+    {
+      "url": "/audio/road-idle.ogg",
+      "rpm": 1000,
+      "creator": "GGBotNet",
+      "license": "CC0-1.0",
+      "source": "https://opengameart.org/content/car-sound-effects-pack-low-quality"
+    },
+    {
+      "url": "/audio/road-mid.ogg",
+      "rpm": 3200,
+      "creator": "GGBotNet",
+      "license": "CC0-1.0",
+      "source": "https://opengameart.org/content/car-sound-effects-pack-low-quality"
+    },
+    {
+      "url": "/audio/road-high.ogg",
+      "rpm": 6500,
+      "creator": "GGBotNet",
+      "license": "CC0-1.0",
+      "source": "https://opengameart.org/content/car-sound-effects-pack-low-quality"
+    },
+    {
+      "url": "/audio/v8-idle.ogg",
+      "rpm": 1000,
+      "creator": "DerMeehdrescher / Meehdrescher Studios",
+      "license": "CC-BY-SA-4.0",
+      "source": "https://opengameart.org/content/generic-v8-engine-sound"
+    },
+    {
+      "url": "/audio/v8-mid.ogg",
+      "rpm": 3500,
+      "creator": "DerMeehdrescher / Meehdrescher Studios",
+      "license": "CC-BY-SA-4.0",
+      "source": "https://opengameart.org/content/generic-v8-engine-sound"
+    },
+    {
+      "url": "/audio/v8-high.ogg",
+      "rpm": 6500,
+      "creator": "DerMeehdrescher / Meehdrescher Studios",
+      "license": "CC-BY-SA-4.0",
+      "source": "https://opengameart.org/content/generic-v8-engine-sound"
+    }
+  ]
+}
