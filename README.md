@@ -1,6 +1,13 @@
+<!-- Current systems: V0.3; earlier milestone notes below describe the prototype. -->
 # DriftX / APEX — Drift Club
 
-A low-poly browser racing and drifting game built with **Vite, Three.js, Cannon-es and PeerJS**. Production: https://driftx-beta.vercel.app/
+A low-poly browser racing and drifting game built with **Vite, Three.js, Rapier WASM and PeerJS**. Production: https://driftx-beta.vercel.app/
+
+## V0.3 systems
+
+The production controller now uses Rapier at 120 Hz. Garage → Performance includes engine swaps, turbo spool, LSD/welded differentials, 35°–65° angle kits, coilovers and separate aero/camber tuning. Start enables procedural Web Audio; optional licensed three-layer clips can be imported. Session Mode selects gymkhana and tandem practice.
+
+See [VEHICLE-SYSTEMS.md](VEHICLE-SYSTEMS.md) for the four implementation deliverables and known networking limits, and [AUDIO-PIPELINE.md](AUDIO-PIPELINE.md) for audio search/import. Tandem is client-side practice; server-synced friend ghosts and authoritative battle rounds are not implemented.
 
 ## Run
 

@@ -1,3 +1,4 @@
+import {addGymkhana} from './gymkhana.js';
 import * as T from 'three';
 export const TRACKS=[
  {name:'Alpine Circuit',tag:'ALPINE / 01',subtitle:'Pine forests. Hairpins. A proper racing line.',difficulty:'TECHNICAL',theme:'alpine',width:14,sky:'#cbdedb',ground:'#88a78a',road:'#47565b',accent:'#edbb74',points:[[-68,42],[-78,-25],[-47,-66],[13,-65],[51,-39],[71,-52],[91,-10],[71,30],[29,16],[9,58],[-31,69]]},
@@ -37,5 +38,5 @@ export function createEnvironment(scene,index=0,track){
   for(let i=0;i<45;i++){const a=random()*6.28,r=105+random()*20,x=Math.cos(a)*r,z=Math.sin(a)*r;if(track&&track.nearest({x,z}).distance<c.width/2+4)continue;rocks.push({p:[x,.6,z],s:[1+random()*2,.8+random(),1+random()*2],yaw:a});}instances(group,new T.DodecahedronGeometry(1,0),mat('#aebaa5'),rocks);
   if(c.theme==='coastal'){const huts=[];for(let i=0;i<6;i++)huts.push({p:[-25+i*11,1.3,-105],s:[5,2.6,5]});instances(group,new T.BoxGeometry(1,1,1),mat('#ded5b2'),huts);}
  }
- group.userData.colliders=colliders;return group;
+ if(c.theme==='dockyard')addGymkhana(group,colliders);group.userData.colliders=colliders;return group;
 }

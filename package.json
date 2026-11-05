@@ -1,6 +1,6 @@
 {
   "name": "apex-drift-club",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,10 +10,11 @@
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {
-    "three": "^0.180.0",
+    "@dimforge/rapier3d-compat": "^0.21.0",
     "cannon-es": "^0.20.0",
+    "lucide": "^0.468.0",
     "peerjs": "^1.5.5",
-    "lucide": "^0.468.0"
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "vite": "^7.1.12"
