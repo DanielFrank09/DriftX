@@ -5,3 +5,4 @@ dist/
 
 # Local hosting identity
 .openai/
+!.env.example
