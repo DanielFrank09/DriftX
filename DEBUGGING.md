@@ -32,3 +32,16 @@ Auto quality lowers resolution and disables shadows on slower devices. Medium/Lo
 Automated tests exercise three-client snapshot delivery, join failure, capacity, stale callbacks, leave cleanup, interpolation, clock offsets and reset snapping. The real-browser test reached PeerJS signaling and ICE negotiation but could not establish a transport using the shared PeerJS relay infrastructure in this network. Therefore internet multiplayer is **not yet verified end-to-end** here.
 
 Built-in PeerJS ICE servers are preserved, and TCP relay candidates are added. `/api/ice` supports a dedicated relay provider on Vercel without exposing its API key. For reliable joins on restrictive networks, configure working TURN credentials or provide a room-relay backend. See README.md and `.env.example`. A public backend requires the owner's hosting approval; no account or paid service was created during this audit.
+
+## V0.2.1 follow-up: visual instability
+
+The user's open Sites preview was still V0.1; the Vercel deployment was V0.2. Both hosting targets are now updated from the same source.
+
+- Chase-camera smoothing previously operated on world position, producing a speed-dependent following distance. The rig now transports with the interpolated chassis and damps only offset/rotation changes; explicit resets snap the rig.
+- Hood view hides the enclosing local vehicle mesh and moves the eye forward, avoiding near-plane intersections with the roof/glass/body.
+- Transparent skid boxes wrote depth and overlapped at identical height. They are now flat decals with depth writes disabled and polygon offset. Effects clear on reset/map changes.
+- Alternating curb boxes overlapped at bend seams. Curbs now share exact spline endpoints without overlap; road paint has more vertical separation.
+- Near-identical body profile stations are deduplicated to avoid sliver faces.
+- Out-of-area recovery now warns and allows three seconds to return instead of abruptly teleporting the car at an invisible radius.
+
+Validation: 25 automated tests pass, including camera distance through acceleration/braking/reversal at 30/60/144 FPS and all twelve cars under sustained forward input with uneven frame timing. Browser checks exercised forward drive, braking into reverse, chase/hood changes, map changes and drift decals. The latest physics did not reproduce spontaneous direction reversal; the older preview was confirmed stale. Multiplayer transport remains dependent on a configured working relay as documented above.

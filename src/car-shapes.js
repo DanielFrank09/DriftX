@@ -27,7 +27,7 @@ export function buildBody(parent,c,paint,ctx){
  const {polygon}=ctx,half=c.length/2,stations=new Set([-half,half,...c.roof]);
  for(let i=0;i<=28;i++)stations.add(-half+c.length*i/28);
  for(const a of [-c.wheelbase/2+c.axleOffset,c.wheelbase/2+c.axleOffset])for(let i=0;i<=10;i++)stations.add(a+Math.cos(i/10*Math.PI)*(c.radius+.055));
- const rows=[...stations].filter(z=>z>=-half&&z<=half).sort((a,b)=>a-b).map(z=>({z,...crossSection(c,z)}));
+ const rows=[...stations].filter(z=>z>=-half&&z<=half).sort((a,b)=>a-b).filter((z,i,all)=>i===0||z-all[i-1]>1e-5).map(z=>({z,...crossSection(c,z)}));
  const point=(r,p,side)=>[side*p[0],p[1],r.z+fasciaSetback(c,p[0],r.z)];
  for(let i=0;i<rows.length-1;i++){
   const a=rows[i],b=rows[i+1],mid=(a.z+b.z)/2,open=c.id==='mx5'&&mid>c.roof[0]&&mid<c.roof[4];

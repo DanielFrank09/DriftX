@@ -5,6 +5,9 @@ import {ackermann,Powertrain} from '../src/powertrain.js';
 import {CARS} from '../src/catalog.js';
 import {LapTracker} from '../src/laps.js';
 import {Vector3,Quaternion} from 'three';
+test('all cars stay grounded and never reverse direction under sustained forward input',()=>{
+ for(const car of CARS){const p=new CarPhysics();p.configureCar(car);p.reset({x:0,z:0},0);for(let i=0;i<1800;i++){p.update(i%3===0?1/30:1/120,{throttle:1,steer:0});if(i>120){assert.ok(p.localVelocity.z<=.01,car.id+' reversed');assert.ok(p.body.position.y>.3&&p.body.position.y<.7,car.id+' bounced');}}}
+});
 test('fixed-timestep handling produces the same trajectory at 30, 60 and 144 render FPS',()=>{
  const runs=[30,60,144].map(fps=>{const p=new CarPhysics();p.configureCar(CARS[0]);p.reset({x:0,z:0},0);for(let i=0;i<fps*6;i++)p.update(1/fps,{throttle:1,steer:.25,handbrake:false});return p;});
  for(const p of runs.slice(1)){assert.ok(p.body.position.distanceTo(runs[0].body.position)<1e-5);assert.ok(Math.abs(p.speed-runs[0].speed)<1e-5);}
